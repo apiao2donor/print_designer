@@ -5,7 +5,10 @@
 		@mouseup="handleMouseUp($event, width)"
 		@mousemove="mouseMoveHandler($event, width)"
 		@mouseleave="mouseLeaveHandler(width)"
-		:style="[postionalStyles(startX, startY, width, height)]"
+		:style="[
+			postionalStyles(startX, startY, width, height),
+			style.zIndex && { zIndex: style.zIndex },
+		]"
 		:class="[
 			'table-container',
 			classes,
@@ -14,7 +17,7 @@
 	>
 		<div
 			:style="['overflow: hidden;', widthHeightStyle(width, height)]"
-			@click.stop.self="
+			@click.self="
 				() => {
 					selectedColumn = null;
 					selectedDynamicText = null;
@@ -46,7 +49,7 @@
 							@dragleave="dragleave"
 							@dragover="allowDrop"
 							@contextmenu.prevent="handleMenu($event, index)"
-							@mousedown.self="handleColumnClick(column)"
+							@mousedown="handleColumnClick(column)"
 							@dblclick.stop="handleDblClick(table, column)"
 							:ref="
 								(el) => {
@@ -163,7 +166,6 @@ const {
 	selectedColumn,
 	selectedDynamicText,
 	DOMRef,
-	isDynamicHeight,
 } = toRefs(props.object);
 
 watch(

@@ -15,7 +15,11 @@
         {%- set value = _(frappe.db.get_value(field.doctype, doc[field.parentField], field.fieldname)) -%}
         {{ frappe.format(value, {'fieldtype': field.fieldtype, 'options': field.options}) }}
     {%- elif row -%}
+    {%- if field.fieldtype == "Image" and row.get(field['options']) -%}
+        <img class="print-item-image" src="{{ row.get(field['options']) }}" alt="">
+    {%- else -%}
         {{row.get_formatted(field.fieldname)}}
+    {%- endif -%}
     {%- else -%}
         {{doc.get_formatted(field.fieldname)}}
     {%- endif -%}
@@ -31,7 +35,7 @@
                     {{ _(field.label) }}
                 </span>
             {% endif %}
-            <span class="dynamic-span {% if not field.is_static and field.is_labelled %}valueSpanTag{%endif%} {{page_class(field)}} }}"
+            <span class="dynamic-span {% if not field.is_static and field.is_labelled %}valueSpanTag{%endif%} {{page_class(field)}}"
                 style="{%- if element.style.get('color') -%}{{ convert_css({'color': element.style.get('color')})}}{%- endif -%} {{convert_css(field.style)}} user-select:auto;">
                 {{ span_value }}
             </span>
